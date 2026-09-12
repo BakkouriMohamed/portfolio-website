@@ -1,6 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
+import Image from "next/image";
 import { SectionHeader } from "./section-header";
 import { experiences } from "@/lib/portfolio-data";
 
@@ -33,8 +34,8 @@ export function Experience() {
               className="group grid grid-cols-12 gap-4 md:gap-8 py-10 md:py-12 border-b border-border hover:bg-background transition-colors duration-300 -mx-4 px-4 md:-mx-8 md:px-8 rounded-sm"
             >
               {/* Period + index */}
-              <div className="col-span-12 md:col-span-2">
-                <div className="font-mono text-[10px] uppercase tracking-wider text-swiss-red mb-1">
+              <div className="col-span-12 md:col-span-2 flex md:flex-col md:items-start items-center gap-3 md:gap-1">
+                <div className="font-mono text-[10px] uppercase tracking-wider text-swiss-red">
                   {String(experiences.length - i).padStart(2, "0")}
                 </div>
                 <div className="font-mono text-xs text-muted-foreground">
@@ -42,18 +43,40 @@ export function Experience() {
                 </div>
               </div>
 
-              {/* Role + company */}
-              <div className="col-span-12 md:col-span-5">
-                <h3 className="font-display text-2xl md:text-3xl lg:text-4xl font-bold tracking-tight leading-tight">
-                  {exp.role}
-                </h3>
-                <div className="mt-2 flex items-baseline gap-3 flex-wrap">
-                  <span className="font-display text-lg font-medium">
-                    {exp.company}
-                  </span>
-                  <span className="font-mono text-xs uppercase tracking-wider text-muted-foreground">
-                    {exp.location}
-                  </span>
+              {/* Logo + Role + company */}
+              <div className="col-span-12 md:col-span-5 flex items-start gap-4 md:gap-6">
+                {/* Logo */}
+                {exp.logo ? (
+                  <div className="relative w-16 h-16 md:w-20 md:h-20 flex-shrink-0 border border-border bg-background p-2 overflow-hidden group-hover:border-swiss-red transition-colors duration-300">
+                    <Image
+                      src={exp.logo}
+                      alt={`Logo ${exp.company}`}
+                      fill
+                      sizes="80px"
+                      className="object-contain p-1.5 transition-transform duration-500 group-hover:scale-110"
+                    />
+                  </div>
+                ) : (
+                  /* Placeholder when no logo: monogram block */
+                  <div className="relative w-16 h-16 md:w-20 md:h-20 flex-shrink-0 border border-border bg-foreground text-background flex items-center justify-center group-hover:bg-swiss-red group-hover:border-swiss-red transition-colors duration-300">
+                    <span className="font-display text-2xl md:text-3xl font-bold tracking-tightest">
+                      {exp.company.charAt(0)}
+                    </span>
+                  </div>
+                )}
+
+                <div className="flex-1 min-w-0">
+                  <h3 className="font-display text-2xl md:text-3xl lg:text-4xl font-bold tracking-tight leading-tight">
+                    {exp.role}
+                  </h3>
+                  <div className="mt-2 flex items-baseline gap-3 flex-wrap">
+                    <span className="font-display text-lg font-medium">
+                      {exp.company}
+                    </span>
+                    <span className="font-mono text-xs uppercase tracking-wider text-muted-foreground">
+                      {exp.location}
+                    </span>
+                  </div>
                 </div>
               </div>
 

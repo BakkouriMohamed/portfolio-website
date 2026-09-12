@@ -36,14 +36,15 @@ export const education = [
 
 export const experiences = [
   {
-    role: "Assistant Manager",
-    company: "Rim Cosmetic",
+    role: "Stagiaire Marketing",
+    company: "Marjane Group",
     location: "Maroc",
-    period: "Déc. 2025 — Fév. 2026",
-    tags: ["Management", "Digital", "Social Media"],
+    period: "Mai — Juin 2026",
+    tags: ["Marketing", "Retail", "Distribution"],
     description:
-      "Accompagnement de la direction sur le pilotage digital et la gestion des réseaux sociaux d'une marque cosmétique. Coordination des opérations marketing et suivi des indicateurs de performance.",
+      "Stage marketing au sein du leader marocain de la grande distribution. Participation aux opérations merchandising, analyse des ventes et support aux lancements de campagnes en magasin.",
     metric: null,
+    logo: "/logo-marjane.jpg",
   },
   {
     role: "Assistant Marketing",
@@ -54,6 +55,7 @@ export const experiences = [
     description:
       "Pilotage de la stratégie social media pour une agence événementielle : campagnes, création de contenu et activation d'engagement autour des événements.",
     metric: "+15% d'engagement",
+    logo: "/logo-ghaiti.jpg",
   },
   {
     role: "Assistant Marketing Digital",
@@ -64,6 +66,7 @@ export const experiences = [
     description:
       "Production de contenus orientés conversion et optimisation SEO technique & visuelle pour une marque basée à Paris, en full remote.",
     metric: "+20% de visibilité",
+    logo: null,
   },
 ];
 
@@ -110,6 +113,7 @@ export const projects = [
     description:
       "Développement complet d'une marque de cosmétiques premium : positionnement haut de gamme autour de la Figue de Barbarie, identité visuelle raffinée et stratégie de marque complète — du naming au déploiement.",
     tags: ["Branding", "Positionnement", "Identité visuelle"],
+    image: "/project-ghmoiya.jpg",
   },
   {
     name: "Ghaiti",
@@ -119,6 +123,7 @@ export const projects = [
     description:
       "Stratégie marketing pour une agence événementielle : campagnes social media, gestion de contenu et création d'engagement autour des événements. Activation multi-canal et suivi de performance.",
     tags: ["Social Media", "Campagnes", "Événementiel"],
+    image: null,
   },
   {
     name: "UrbanFlex",
@@ -128,6 +133,7 @@ export const projects = [
     description:
       "Contenus orientés conversion, optimisation SEO visuelle et technique pour maximiser la visibilité en ligne et générer des leads qualifiés. Travail en remote avec une équipe Parisienne.",
     tags: ["SEO", "Contenu", "Conversion"],
+    image: null,
   },
 ];
 

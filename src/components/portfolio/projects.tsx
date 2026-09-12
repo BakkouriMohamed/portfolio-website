@@ -2,6 +2,7 @@
 
 import { motion } from "framer-motion";
 import { useState } from "react";
+import Image from "next/image";
 import { SectionHeader } from "./section-header";
 import { projects } from "@/lib/portfolio-data";
 
@@ -9,10 +10,7 @@ export function Projects() {
   const [hovered, setHovered] = useState<number | null>(null);
 
   return (
-    <section
-      id="projects"
-      className="border-t border-border bg-secondary/30"
-    >
+    <section id="projects" className="border-t border-border bg-secondary/30">
       <div className="mx-auto max-w-[1600px] px-6 lg:px-10 py-24 md:py-32">
         <SectionHeader
           index="05"
@@ -35,50 +33,82 @@ export function Projects() {
               }}
               onMouseEnter={() => setHovered(i)}
               onMouseLeave={() => setHovered(null)}
-              className={`col-span-12 md:col-span-6 lg:col-span-4 group relative border border-border bg-background p-8 md:p-10 overflow-hidden transition-all duration-500 ${
+              className={`col-span-12 md:col-span-6 lg:col-span-4 group relative border border-border bg-background overflow-hidden transition-all duration-500 ${
                 hovered !== null && hovered !== i ? "opacity-40" : "opacity-100"
               }`}
             >
-              {/* Index + year */}
-              <div className="flex items-start justify-between mb-12 md:mb-16">
-                <span className="font-mono text-xs text-swiss-red">
-                  P{String(i + 1).padStart(2, "0")}
-                </span>
-                <span className="font-mono text-xs uppercase tracking-wider text-muted-foreground">
-                  {project.year}
-                </span>
-              </div>
+              {/* Image area — shown when project has an image */}
+              {project.image && (
+                <div className="relative aspect-[4/3] w-full overflow-hidden bg-foreground">
+                  <Image
+                    src={project.image}
+                    alt={`${project.name} — ${project.subtitle}`}
+                    fill
+                    sizes="(max-width: 768px) 100vw, 33vw"
+                    className="object-cover transition-transform duration-700 group-hover:scale-105"
+                  />
+                  {/* Overlay tint that lifts on hover */}
+                  <div className="absolute inset-0 bg-foreground/30 group-hover:bg-foreground/0 transition-colors duration-500" />
+                  {/* Year badge */}
+                  <div className="absolute top-3 right-3 font-mono text-[10px] uppercase tracking-wider text-white bg-black/50 px-2 py-1 backdrop-blur-sm">
+                    {project.year}
+                  </div>
+                  {/* Project index */}
+                  <div className="absolute top-3 left-3 font-mono text-xs text-swiss-red bg-black/50 px-2 py-1 backdrop-blur-sm">
+                    P{String(i + 1).padStart(2, "0")}
+                  </div>
+                </div>
+              )}
 
-              {/* Project name */}
-              <h3 className="font-display text-4xl md:text-5xl lg:text-6xl font-bold tracking-tightest leading-[0.9] uppercase">
-                {project.name}
-              </h3>
+              {/* Content block */}
+              <div className="p-8 md:p-10">
+                {/* Index + year — only when no image */}
+                {!project.image && (
+                  <div className="flex items-start justify-between mb-12 md:mb-16">
+                    <span className="font-mono text-xs text-swiss-red">
+                      P{String(i + 1).padStart(2, "0")}
+                    </span>
+                    <span className="font-mono text-xs uppercase tracking-wider text-muted-foreground">
+                      {project.year}
+                    </span>
+                  </div>
+                )}
 
-              {/* Subtitle */}
-              <div className="mt-3 font-display text-base font-medium text-swiss-red">
-                {project.subtitle}
-              </div>
+                {/* Project name */}
+                <h3
+                  className={`font-display text-4xl md:text-5xl lg:text-6xl font-bold tracking-tightest leading-[0.9] uppercase ${
+                    project.image ? "mt-6" : ""
+                  }`}
+                >
+                  {project.name}
+                </h3>
 
-              {/* Category */}
-              <div className="mt-1 font-mono text-[10px] uppercase tracking-wider text-muted-foreground">
-                {project.category}
-              </div>
+                {/* Subtitle */}
+                <div className="mt-3 font-display text-base font-medium text-swiss-red">
+                  {project.subtitle}
+                </div>
 
-              {/* Description */}
-              <p className="mt-8 text-sm text-muted-foreground leading-relaxed">
-                {project.description}
-              </p>
+                {/* Category */}
+                <div className="mt-1 font-mono text-[10px] uppercase tracking-wider text-muted-foreground">
+                  {project.category}
+                </div>
 
-              {/* Tags */}
-              <div className="mt-8 flex flex-wrap gap-2">
-                {project.tags.map((tag) => (
-                  <span
-                    key={tag}
-                    className="font-mono text-[10px] uppercase tracking-wider border border-border px-2 py-1 group-hover:border-swiss-red group-hover:text-swiss-red transition-colors"
-                  >
-                    {tag}
-                  </span>
-                ))}
+                {/* Description */}
+                <p className="mt-8 text-sm text-muted-foreground leading-relaxed">
+                  {project.description}
+                </p>
+
+                {/* Tags */}
+                <div className="mt-8 flex flex-wrap gap-2">
+                  {project.tags.map((tag) => (
+                    <span
+                      key={tag}
+                      className="font-mono text-[10px] uppercase tracking-wider border border-border px-2 py-1 group-hover:border-swiss-red group-hover:text-swiss-red transition-colors"
+                    >
+                      {tag}
+                    </span>
+                  ))}
+                </div>
               </div>
 
               {/* Hover arrow */}
@@ -88,7 +118,7 @@ export function Projects() {
                   opacity: hovered === i ? 1 : 0,
                 }}
                 transition={{ duration: 0.3 }}
-                className="absolute top-8 right-8 text-swiss-red"
+                className="absolute top-8 right-8 text-swiss-red z-10"
               >
                 <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
                   <path
