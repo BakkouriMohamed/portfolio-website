@@ -37,7 +37,7 @@ export function Projects() {
                 hovered !== null && hovered !== i ? "opacity-40" : "opacity-100"
               }`}
             >
-              {/* Image area — shown when project has an image */}
+              {/* 1. Top image — prominent aesthetic photograph */}
               {project.image && (
                 <div className="relative aspect-[4/3] w-full overflow-hidden bg-foreground">
                   <Image
@@ -49,56 +49,43 @@ export function Projects() {
                   />
                   {/* Overlay tint that lifts on hover */}
                   <div className="absolute inset-0 bg-foreground/30 group-hover:bg-foreground/0 transition-colors duration-500" />
-                  {/* Year badge */}
-                  <div className="absolute top-3 right-3 font-mono text-[10px] uppercase tracking-wider text-white bg-black/50 px-2 py-1 backdrop-blur-sm">
-                    {project.year}
-                  </div>
-                  {/* Project index */}
-                  <div className="absolute top-3 left-3 font-mono text-xs text-swiss-red bg-black/50 px-2 py-1 backdrop-blur-sm">
-                    P{String(i + 1).padStart(2, "0")}
+
+                  {/* P## + Year — top-right corner, combined */}
+                  <div className="absolute top-3 right-3 flex items-center gap-2 font-mono text-[10px] uppercase tracking-wider text-white bg-black/50 backdrop-blur-sm px-2 py-1">
+                    <span className="text-swiss-red font-medium">
+                      P{String(i + 1).padStart(2, "0")}
+                    </span>
+                    <span className="text-white/40">/</span>
+                    <span>{project.year}</span>
                   </div>
                 </div>
               )}
 
-              {/* Content block */}
+              {/* Content block below image */}
               <div className="p-8 md:p-10">
-                {/* Index + year — only when no image */}
-                {!project.image && (
-                  <div className="flex items-start justify-between mb-12 md:mb-16">
-                    <span className="font-mono text-xs text-swiss-red">
-                      P{String(i + 1).padStart(2, "0")}
-                    </span>
-                    <span className="font-mono text-xs uppercase tracking-wider text-muted-foreground">
-                      {project.year}
-                    </span>
-                  </div>
-                )}
-
-                {/* Project name */}
+                {/* 2. Large bold project title */}
                 <h3
-                  className={`font-display text-4xl md:text-5xl lg:text-6xl font-bold tracking-tightest leading-[0.9] uppercase ${
-                    project.image ? "mt-6" : ""
+                  className={`font-display font-bold uppercase tracking-tightest leading-[0.9] text-4xl md:text-5xl lg:text-6xl ${
+                    project.image ? "mt-0" : "mt-12 md:mt-16"
                   }`}
                 >
                   {project.name}
                 </h3>
 
-                {/* Subtitle */}
+                {/* 3. Subtitle (red) + sub-category tag in smaller caps */}
                 <div className="mt-3 font-display text-base font-medium text-swiss-red">
                   {project.subtitle}
                 </div>
-
-                {/* Category */}
                 <div className="mt-1 font-mono text-[10px] uppercase tracking-wider text-muted-foreground">
                   {project.category}
                 </div>
 
-                {/* Description */}
+                {/* 4. Descriptive paragraph */}
                 <p className="mt-8 text-sm text-muted-foreground leading-relaxed">
                   {project.description}
                 </p>
 
-                {/* Tags */}
+                {/* 5. Tags / pills at the bottom */}
                 <div className="mt-8 flex flex-wrap gap-2">
                   {project.tags.map((tag) => (
                     <span
@@ -118,7 +105,7 @@ export function Projects() {
                   opacity: hovered === i ? 1 : 0,
                 }}
                 transition={{ duration: 0.3 }}
-                className="absolute top-8 right-8 text-swiss-red z-10"
+                className="absolute top-3 left-3 text-swiss-red z-10"
               >
                 <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
                   <path

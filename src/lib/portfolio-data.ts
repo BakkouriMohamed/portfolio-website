@@ -123,7 +123,7 @@ export const projects = [
     description:
       "Stratégie marketing pour une agence événementielle : campagnes social media, gestion de contenu et création d'engagement autour des événements. Activation multi-canal et suivi de performance.",
     tags: ["Social Media", "Campagnes", "Événementiel"],
-    image: null,
+    image: "/project-ghaiti.jpg",
   },
   {
     name: "UrbanFlex",
@@ -133,7 +133,7 @@ export const projects = [
     description:
       "Contenus orientés conversion, optimisation SEO visuelle et technique pour maximiser la visibilité en ligne et générer des leads qualifiés. Travail en remote avec une équipe Parisienne.",
     tags: ["SEO", "Contenu", "Conversion"],
-    image: null,
+    image: "/project-urbanflex.jpg",
   },
 ];
 
