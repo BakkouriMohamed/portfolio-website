@@ -8,6 +8,8 @@ export const profile = {
   role: "Spécialiste en Marketing Digital",
   location: "Fès, Maroc",
   email: "mohamedbakkouri88@gmail.com",
+  linkedin: "https://www.linkedin.com/in/mohamedbakkouri/",
+  linkedinCerts: "https://www.linkedin.com/in/mohamedbakkouri/details/certifications/",
   intro:
     "Étudiant en Master Marketing Digital à l'ENCG Fès. Double culture académique — Classes Préparatoires ECS puis Master Marketing Digital. Je combine stratégie, créativité et analyse de données pour développer la visibilité des marques, de l'audit SEO à la gestion des réseaux sociaux, au service d'objectifs mesurables.",
   tagline: "Stratégie · Créativité · Données",
@@ -130,10 +132,30 @@ export const projects = [
 ];
 
 export const certifications = [
-  { name: "Google Digital Marketing", year: "2023", issuer: "Google" },
-  { name: "Meta Social Media Marketing", year: "2022", issuer: "Meta" },
-  { name: "HubSpot Content Marketing", year: "2023", issuer: "HubSpot" },
-  { name: "Google Analytics 4", year: "2024", issuer: "Google" },
+  {
+    name: "Google Digital Marketing",
+    year: "2023",
+    issuer: "Google",
+    credentialId: "Google Activate",
+  },
+  {
+    name: "Meta Social Media Marketing",
+    year: "2022",
+    issuer: "Meta",
+    credentialId: "Meta Blueprint",
+  },
+  {
+    name: "HubSpot Content Marketing",
+    year: "2023",
+    issuer: "HubSpot",
+    credentialId: "HubSpot Academy",
+  },
+  {
+    name: "Google Analytics 4",
+    year: "2024",
+    issuer: "Google",
+    credentialId: "Skillshop",
+  },
 ];
 
 export const navSections = [

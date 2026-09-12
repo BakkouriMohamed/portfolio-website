@@ -64,6 +64,19 @@ export function About() {
             </div>
             <div>
               <div className="font-mono text-[10px] uppercase tracking-wider text-muted-foreground mb-1">
+                LinkedIn
+              </div>
+              <a
+                href={profile.linkedin}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="link-underline font-mono text-sm hover:text-swiss-red transition-colors"
+              >
+                /in/mohamedbakkouri
+              </a>
+            </div>
+            <div>
+              <div className="font-mono text-[10px] uppercase tracking-wider text-muted-foreground mb-1">
                 Statut
               </div>
               <div className="flex items-center gap-2 font-display text-lg font-medium">

@@ -100,7 +100,7 @@ export function Contact() {
               Disponible
             </div>
           </div>
-          <div className="col-span-12 md:col-span-3">
+          <div className="col-span-6 md:col-span-3">
             <div className="font-mono text-[10px] uppercase tracking-wider text-background/50 mb-2">
               Langues
             </div>
@@ -108,13 +108,18 @@ export function Contact() {
               FR · AR · EN
             </div>
           </div>
-          <div className="col-span-12 md:col-span-3 md:text-right">
+          <div className="col-span-6 md:col-span-3">
             <div className="font-mono text-[10px] uppercase tracking-wider text-background/50 mb-2">
-              Réponse
+              LinkedIn
             </div>
-            <div className="font-display text-base font-medium">
-              Sous 24 — 48h
-            </div>
+            <a
+              href={profile.linkedin}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="link-underline font-mono text-sm hover:text-swiss-red transition-colors"
+            >
+              /in/mohamedbakkouri
+            </a>
           </div>
         </motion.div>
 
