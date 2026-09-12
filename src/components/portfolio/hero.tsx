@@ -4,6 +4,7 @@ import { motion, useMotionValue, useTransform, useSpring } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { profile } from "@/lib/portfolio-data";
+import { PhysicsDot } from "./physics-dot";
 
 /**
  * Hero — Swiss + Motion with portrait
@@ -14,7 +15,7 @@ import { profile } from "@/lib/portfolio-data";
  *
  * Motion:
  *  - Word-by-word slide-up reveal
- *  - Cursor-tracking red accent dot on the name
+ *  - Interactive physics dot on the name (click to play, click to reset)
  *  - Scroll indicator bounce
  *  - Photo: grayscale → color on hover, subtle parallax via cursor
  */
@@ -25,9 +26,6 @@ export function Hero() {
 
   const sx = useSpring(mx, { stiffness: 150, damping: 20, mass: 0.5 });
   const sy = useSpring(my, { stiffness: 150, damping: 20, mass: 0.5 });
-
-  const dotX = useTransform(sx, [-0.5, 0.5], [-15, 15]);
-  const dotY = useTransform(sy, [-0.5, 0.5], [-15, 15]);
 
   // Subtle parallax on the photo
   const imgX = useTransform(sx, [-0.5, 0.5], [8, -8]);
@@ -120,10 +118,7 @@ export function Hero() {
             <span className="block overflow-hidden">
               <motion.span variants={wordVariant} className="block">
                 Bakkouri
-                <motion.span
-                  style={{ x: dotX, y: dotY }}
-                  className="inline-block ml-2 md:ml-4 align-middle w-[0.4em] h-[0.4em] bg-swiss-red rounded-full"
-                />
+                <PhysicsDot />
               </motion.span>
             </span>
           </motion.h1>
