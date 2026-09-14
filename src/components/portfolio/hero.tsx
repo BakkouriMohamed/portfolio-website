@@ -4,7 +4,7 @@ import { motion, useMotionValue, useTransform, useSpring } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { profile } from "@/lib/portfolio-data";
-import { SnakeDot } from "./snake-dot";
+import { EasterDot } from "./snake-dot";
 
 /**
  * Hero — Swiss + Motion with portrait
@@ -118,7 +118,7 @@ export function Hero() {
             <span className="block overflow-hidden">
               <motion.span variants={wordVariant} className="block">
                 Bakkouri
-                <SnakeDot />
+                <EasterDot />
               </motion.span>
             </span>
           </motion.h1>

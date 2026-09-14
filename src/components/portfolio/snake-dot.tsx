@@ -1,23 +1,22 @@
 "use client";
 
-import { useState, useEffect, useRef, useCallback } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { useState, useEffect, useRef, useCallback, useSyncExternalStore } from "react";
+import { motion, AnimatePresence, useMotionValue, animate } from "framer-motion";
+import { createPortal } from "react-dom";
 
 /**
- * SnakeDot — small dot next to the name that opens a minimalist Snake game.
+ * EasterDot — combined physics ball + Snake game easter egg.
  *
- * Behavior:
- *  - Idle: 8px gray dot, cursor pointer, subtle hover scale
- *  - Click: opens a 300x300px Snake game inline (fade + scale transition)
- *  - Snake controlled with arrow keys (or WASD)
- *  - Food appears randomly, eating grows the snake
- *  - Wall/self collision = game over with "Rejouer" button or Enter key
- *  - Score displayed during play
- *  - Close on outside click, Esc key, or close button
+ * Flow:
+ *  - Mode "idle":     small pulsing dot + "Cliquer pour jouer" hint
+ *  - Mode "physics":  dot inflates into a floating ball — draggable, gravity, bounces
+ *  - Mode "snake":    click the ball again → it inflates further and morphs into the Snake game
+ *  - Close snake / Esc → back to idle (small dot)
  *
- * Visual: Swiss-minimal — monochrome snake, Swiss-red food, subtle grid.
+ * The "inflation" is the visual transition from ball to game canvas.
  */
 
+// ===== Snake game constants =====
 const GRID_SIZE = 15;
 const CELL_SIZE = 20;
 const CANVAS_SIZE = GRID_SIZE * CELL_SIZE; // 300px
@@ -31,7 +30,6 @@ const INITIAL_SNAKE: Point[] = [
   { x: 6, y: 7 },
   { x: 5, y: 7 },
 ];
-
 const INITIAL_DIRECTION: Direction = "right";
 
 function randomFood(snake: Point[]): Point {
@@ -45,48 +43,144 @@ function randomFood(snake: Point[]): Point {
   return pos;
 }
 
-export function SnakeDot() {
-  const [gameOpen, setGameOpen] = useState(false);
+// ===== Physics constants =====
+const GRAVITY = 0.5;
+const FRICTION = 0.992;
+const BOUNCE_DAMP = 0.68;
+const MIN_VEL = 0.04;
+const TOP_MARGIN = 8;
+const FLOOR_FRICTION = 0.92;
+const BALL_SIZE = 36; // px, in physics mode
+
+type Mode = "idle" | "physics" | "snake";
+
+// SSR-safe mount check
+const emptySubscribe = () => () => {};
+const clientSnapshot = () => true;
+const serverSnapshot = () => false;
+
+export function EasterDot() {
+  const mounted = useSyncExternalStore(emptySubscribe, clientSnapshot, serverSnapshot);
+
+  const [mode, setMode] = useState<Mode>("idle");
+
+  // Snake state
   const [snake, setSnake] = useState<Point[]>(INITIAL_SNAKE);
   const [food, setFood] = useState<Point>({ x: 10, y: 7 });
   const [direction, setDirection] = useState<Direction>(INITIAL_DIRECTION);
   const [score, setScore] = useState(0);
   const [gameOver, setGameOver] = useState(false);
 
+  // Physics state
+  const inlineRef = useRef<HTMLSpanElement>(null);
+  const ballX = useMotionValue(0);
+  const ballY = useMotionValue(0);
+
+  // Refs for game loops & input
   const directionRef = useRef<Direction>(INITIAL_DIRECTION);
-  const containerRef = useRef<HTMLDivElement>(null);
   const gameLoopRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const physicsRafRef = useRef<number | null>(null);
+  const velRef = useRef({ x: 0, y: 0 });
+  const draggingRef = useRef(false);
+  const lastPointerRef = useRef({ x: 0, y: 0, t: 0 });
+  const downPosRef = useRef({ x: 0, y: 0 });
+  const isDragRef = useRef(false);
+  const containerRef = useRef<HTMLDivElement>(null);
 
-  const closeGame = useCallback(() => {
-    setGameOpen(false);
-    if (gameLoopRef.current) {
-      clearInterval(gameLoopRef.current);
-      gameLoopRef.current = null;
-    }
-  }, []);
+  // ===== Mode transitions =====
+  const enterPhysicsMode = useCallback(() => {
+    if (!inlineRef.current || mode !== "idle") return;
+    const rect = inlineRef.current.getBoundingClientRect();
+    // Place ball center at the dot's center
+    ballX.set(rect.left + rect.width / 2 - BALL_SIZE / 2);
+    ballY.set(rect.top + rect.height / 2 - BALL_SIZE / 2);
+    velRef.current = { x: 0, y: 0 };
+    setMode("physics");
+  }, [mode, ballX, ballY]);
 
-  const resetGame = useCallback(() => {
+  const enterSnakeMode = useCallback(() => {
+    if (physicsRafRef.current) cancelAnimationFrame(physicsRafRef.current);
+    physicsRafRef.current = null;
+    velRef.current = { x: 0, y: 0 };
+    draggingRef.current = false;
+    // Reset snake state
     setSnake(INITIAL_SNAKE);
     setFood(randomFood(INITIAL_SNAKE));
     setDirection(INITIAL_DIRECTION);
     directionRef.current = INITIAL_DIRECTION;
     setScore(0);
     setGameOver(false);
+    setMode("snake");
   }, []);
 
-  const openGame = useCallback(() => {
-    resetGame();
-    setGameOpen(true);
-  }, [resetGame]);
+  const closeToIdle = useCallback(() => {
+    if (gameLoopRef.current) clearInterval(gameLoopRef.current);
+    gameLoopRef.current = null;
+    setMode("idle");
+  }, []);
 
-  // Keyboard controls
+  // ===== Idle click handler =====
+  const handleIdleClick = useCallback(() => {
+    if (mode === "idle") enterPhysicsMode();
+    // In other modes, the floating ball handles its own clicks
+  }, [mode, enterPhysicsMode]);
+
+  // ===== Physics simulation loop =====
   useEffect(() => {
-    if (!gameOpen) return;
+    if (mode !== "physics") return;
+
+    const tick = () => {
+      if (!draggingRef.current) {
+        velRef.current.y += GRAVITY;
+        velRef.current.x *= FRICTION;
+        velRef.current.y *= FRICTION;
+
+        let newX = ballX.get() + velRef.current.x;
+        let newY = ballY.get() + velRef.current.y;
+
+        if (newX < 0) {
+          newX = 0;
+          velRef.current.x = -velRef.current.x * BOUNCE_DAMP;
+        } else if (newX > window.innerWidth - BALL_SIZE) {
+          newX = window.innerWidth - BALL_SIZE;
+          velRef.current.x = -velRef.current.x * BOUNCE_DAMP;
+        }
+        if (newY < TOP_MARGIN) {
+          newY = TOP_MARGIN;
+          velRef.current.y = -velRef.current.y * BOUNCE_DAMP;
+        } else if (newY > window.innerHeight - BALL_SIZE) {
+          newY = window.innerHeight - BALL_SIZE;
+          velRef.current.y = -velRef.current.y * BOUNCE_DAMP;
+          velRef.current.x *= FLOOR_FRICTION;
+          if (Math.abs(velRef.current.y) < 1) velRef.current.y = 0;
+        }
+        if (Math.abs(velRef.current.x) < MIN_VEL) velRef.current.x = 0;
+        if (
+          Math.abs(velRef.current.y) < MIN_VEL &&
+          newY >= window.innerHeight - BALL_SIZE - 0.5
+        )
+          velRef.current.y = 0;
+
+        ballX.set(newX);
+        ballY.set(newY);
+      }
+      physicsRafRef.current = requestAnimationFrame(tick);
+    };
+
+    physicsRafRef.current = requestAnimationFrame(tick);
+    return () => {
+      if (physicsRafRef.current) cancelAnimationFrame(physicsRafRef.current);
+      physicsRafRef.current = null;
+    };
+  }, [mode, ballX, ballY]);
+
+  // ===== Snake keyboard controls =====
+  useEffect(() => {
+    if (mode !== "snake") return;
 
     const handleKey = (e: KeyboardEvent) => {
       const key = e.key.toLowerCase();
       const current = directionRef.current;
-
       const turns: Record<string, { dir: Direction; forbidden: Direction }> = {
         arrowup: { dir: "up", forbidden: "down" },
         w: { dir: "up", forbidden: "down" },
@@ -103,21 +197,26 @@ export function SnakeDot() {
         setDirection(turns[key].dir);
         e.preventDefault();
       } else if (key === "enter" && gameOver) {
-        resetGame();
+        setSnake(INITIAL_SNAKE);
+        setFood(randomFood(INITIAL_SNAKE));
+        setDirection(INITIAL_DIRECTION);
+        directionRef.current = INITIAL_DIRECTION;
+        setScore(0);
+        setGameOver(false);
         e.preventDefault();
       } else if (key === "escape") {
-        closeGame();
+        closeToIdle();
         e.preventDefault();
       }
     };
 
     window.addEventListener("keydown", handleKey);
     return () => window.removeEventListener("keydown", handleKey);
-  }, [gameOpen, gameOver, resetGame, closeGame]);
+  }, [mode, gameOver, closeToIdle]);
 
-  // Game loop
+  // ===== Snake game loop =====
   useEffect(() => {
-    if (!gameOpen || gameOver) return;
+    if (mode !== "snake" || gameOver) return;
 
     gameLoopRef.current = setInterval(() => {
       setSnake((prev) => {
@@ -137,52 +236,45 @@ export function SnakeDot() {
             break;
         }
 
-        // Wrap around walls — the snake comes out the other side
+        // Wrap around walls
         head.x = (head.x + GRID_SIZE) % GRID_SIZE;
         head.y = (head.y + GRID_SIZE) % GRID_SIZE;
 
-        // Self collision (only — walls no longer kill)
+        // Self collision only
         if (prev.some((s) => s.x === head.x && s.y === head.y)) {
           setGameOver(true);
           return prev;
         }
 
         const newSnake = [head, ...prev];
-
-        // Eat food
         if (head.x === food.x && head.y === food.y) {
           setScore((s) => s + 1);
           setFood(randomFood(newSnake));
         } else {
           newSnake.pop();
         }
-
         return newSnake;
       });
     }, TICK_MS);
 
     return () => {
-      if (gameLoopRef.current) {
-        clearInterval(gameLoopRef.current);
-        gameLoopRef.current = null;
-      }
+      if (gameLoopRef.current) clearInterval(gameLoopRef.current);
     };
-  }, [gameOpen, gameOver, food]);
+  }, [mode, gameOver, food]);
 
-  // Close on outside click
+  // ===== Close snake on outside click =====
   useEffect(() => {
-    if (!gameOpen) return;
+    if (mode !== "snake") return;
 
     const handleClick = (e: MouseEvent) => {
       if (
         containerRef.current &&
         !containerRef.current.contains(e.target as Node)
       ) {
-        closeGame();
+        closeToIdle();
       }
     };
 
-    // Delay to avoid the opening click itself
     const t = setTimeout(() => {
       document.addEventListener("mousedown", handleClick);
     }, 100);
@@ -191,61 +283,167 @@ export function SnakeDot() {
       clearTimeout(t);
       document.removeEventListener("mousedown", handleClick);
     };
-  }, [gameOpen, closeGame]);
+  }, [mode, closeToIdle]);
 
-  // Cleanup on unmount
+  // ===== Cleanup on unmount =====
   useEffect(() => {
     return () => {
+      if (physicsRafRef.current) cancelAnimationFrame(physicsRafRef.current);
       if (gameLoopRef.current) clearInterval(gameLoopRef.current);
     };
   }, []);
 
+  // ===== Ball pointer handlers (physics mode) =====
+  const handleBallPointerDown = (e: React.PointerEvent) => {
+    e.stopPropagation();
+    e.preventDefault();
+    downPosRef.current = { x: e.clientX, y: e.clientY };
+    isDragRef.current = false;
+    draggingRef.current = true;
+    lastPointerRef.current = {
+      x: e.clientX,
+      y: e.clientY,
+      t: performance.now(),
+    };
+    try {
+      (e.currentTarget as Element).setPointerCapture(e.pointerId);
+    } catch {}
+  };
+
+  const handleBallPointerMove = (e: React.PointerEvent) => {
+    if (mode !== "physics") return;
+
+    const dx = e.clientX - downPosRef.current.x;
+    const dy = e.clientY - downPosRef.current.y;
+    if (!isDragRef.current && Math.hypot(dx, dy) > 5) {
+      isDragRef.current = true;
+    }
+
+    if (!draggingRef.current) return;
+
+    const now = performance.now();
+    const dt = Math.max(1, now - lastPointerRef.current.t);
+    const mdx = e.clientX - lastPointerRef.current.x;
+    const mdy = e.clientY - lastPointerRef.current.y;
+
+    ballX.set(ballX.get() + mdx);
+    ballY.set(ballY.get() + mdy);
+
+    const newVx = (mdx / dt) * 16;
+    const newVy = (mdy / dt) * 16;
+    velRef.current.x = velRef.current.x * 0.4 + newVx * 0.6;
+    velRef.current.y = velRef.current.y * 0.4 + newVy * 0.6;
+
+    lastPointerRef.current = { x: e.clientX, y: e.clientY, t: now };
+  };
+
+  const handleBallPointerUp = (e: React.PointerEvent) => {
+    if (mode !== "physics") return;
+    draggingRef.current = false;
+    try {
+      (e.currentTarget as Element).releasePointerCapture(e.pointerId);
+    } catch {}
+
+    // If it was a click (no drag), enter snake mode (the ball "inflates" into the game)
+    if (!isDragRef.current) {
+      enterSnakeMode();
+    }
+  };
+
   return (
     <>
-      {/* Dot + hint — visible when game is closed */}
+      {/* ===== Idle mode: small dot + hint ===== */}
       <motion.span
-        onClick={openGame}
+        ref={inlineRef}
+        onClick={handleIdleClick}
         role="button"
-        aria-label="Easter egg — cliquez pour jouer au Snake"
+        aria-label="Easter egg — cliquez pour activer la balle"
         tabIndex={0}
         onKeyDown={(e) => {
           if (e.key === "Enter" || e.key === " ") {
             e.preventDefault();
-            openGame();
+            handleIdleClick();
           }
         }}
-        animate={{ opacity: gameOpen ? 0 : 1, scale: gameOpen ? 0.5 : 1 }}
-        transition={{ duration: 0.2 }}
-        className="inline-flex items-center gap-2 align-middle ml-2 md:ml-4 cursor-pointer select-none group"
+        animate={{
+          opacity: mode === "idle" ? 1 : 0,
+          scale: mode === "idle" ? 1 : 0.5,
+        }}
+        transition={{ duration: 0.25 }}
+        className={`inline-flex items-center gap-2 align-middle ml-2 md:ml-4 cursor-pointer select-none group ${
+          mode === "idle" ? "" : "pointer-events-none"
+        }`}
         style={{ touchAction: "none" }}
       >
-        {/* Pulsing dot — bigger, Swiss red, draws attention */}
+        {/* Pulsing aura + dot core */}
         <span className="relative inline-flex items-center justify-center w-5 h-5 md:w-6 md:h-6">
-          {/* Pulsing aura */}
           <span className="absolute inset-0 rounded-full bg-swiss-red/30 animate-ping" />
-          {/* Dot core */}
           <span className="relative w-3 h-3 md:w-4 md:h-4 bg-swiss-red rounded-full transition-transform duration-300 group-hover:scale-125" />
         </span>
-
         {/* Hint label */}
         <span className="font-mono text-[10px] md:text-xs uppercase tracking-wider text-muted-foreground group-hover:text-swiss-red transition-colors duration-300 flex items-center gap-1.5">
           <span>Cliquer pour jouer</span>
-          <svg width="12" height="12" viewBox="0 0 12 12" fill="none" className="opacity-50 group-hover:opacity-100 group-hover:translate-x-0.5 transition-all duration-300">
+          <svg
+            width="12"
+            height="12"
+            viewBox="0 0 12 12"
+            fill="none"
+            className="opacity-50 group-hover:opacity-100 group-hover:translate-x-0.5 transition-all duration-300"
+          >
             <path d="M2 6h8M7 3l3 3-3 3" stroke="currentColor" strokeWidth="1.5" />
           </svg>
         </span>
       </motion.span>
 
-      {/* Game canvas — centered, fades in when game is open */}
+      {/* ===== Physics mode: floating ball ===== */}
+      {mounted && mode === "physics" &&
+        createPortal(
+          <motion.div
+            initial={{ scale: 0.3, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            exit={{ scale: 0.3, opacity: 0 }}
+            transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
+            style={{
+              position: "fixed",
+              left: 0,
+              top: 0,
+              x: ballX,
+              y: ballY,
+              width: BALL_SIZE,
+              height: BALL_SIZE,
+              zIndex: 60,
+              touchAction: "none",
+            }}
+            className="flex items-center justify-center cursor-grab active:cursor-grabbing select-none group"
+            role="button"
+            aria-label="Balle physique — cliquez pour ouvrir le Snake, ou glissez pour jouer avec"
+            tabIndex={0}
+            onPointerDown={handleBallPointerDown}
+            onPointerMove={handleBallPointerMove}
+            onPointerUp={handleBallPointerUp}
+          >
+            {/* Pulsing aura */}
+            <span className="absolute inset-0 rounded-full bg-swiss-red/30 animate-ping" />
+            {/* Ball core — gradient for depth */}
+            <span className="relative w-full h-full rounded-full bg-swiss-red shadow-[0_4px_20px_rgba(230,57,70,0.4)] group-hover:shadow-[0_4px_30px_rgba(230,57,70,0.6)] transition-shadow duration-300" />
+            {/* Hint label below ball */}
+            <span className="absolute top-full mt-2 left-1/2 -translate-x-1/2 whitespace-nowrap font-mono text-[9px] uppercase tracking-wider text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none">
+              Cliquer pour le Snake
+            </span>
+          </motion.div>,
+          document.body
+        )}
+
+      {/* ===== Snake mode: game canvas ===== */}
       <AnimatePresence>
-        {gameOpen && (
+        {mode === "snake" && (
           <div className="fixed inset-0 z-50 flex items-center justify-center pointer-events-none">
             <motion.div
               ref={containerRef}
-              initial={{ opacity: 0, scale: 0.7, y: 20 }}
-              animate={{ opacity: 1, scale: 1, y: 0 }}
-              exit={{ opacity: 0, scale: 0.7, y: 20 }}
-              transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
+              initial={{ opacity: 0, scale: 0.5 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.5 }}
+              transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
               className="pointer-events-auto relative bg-background border border-border p-5 shadow-[0_8px_30px_rgba(0,0,0,0.08)]"
               style={{ width: `${CANVAS_SIZE + 40}px` }}
             >
@@ -266,16 +464,11 @@ export function SnakeDot() {
                   </motion.span>
                 </div>
                 <button
-                  onClick={closeGame}
+                  onClick={closeToIdle}
                   className="text-muted-foreground hover:text-swiss-red transition-colors p-1"
                   aria-label="Fermer le jeu"
                 >
-                  <svg
-                    width="14"
-                    height="14"
-                    viewBox="0 0 16 16"
-                    fill="none"
-                  >
+                  <svg width="14" height="14" viewBox="0 0 16 16" fill="none">
                     <path
                       d="M3 3L13 13M13 3L3 13"
                       stroke="currentColor"
@@ -293,7 +486,7 @@ export function SnakeDot() {
                   height: `${CANVAS_SIZE}px`,
                 }}
               >
-                {/* Subtle grid lines */}
+                {/* Grid lines */}
                 <div
                   className="absolute inset-0"
                   style={{
@@ -330,10 +523,7 @@ export function SnakeDot() {
                   key={`${food.x}-${food.y}`}
                   initial={{ scale: 0 }}
                   animate={{ scale: 1 }}
-                  transition={{
-                    duration: 0.2,
-                    ease: [0.16, 1, 0.3, 1],
-                  }}
+                  transition={{ duration: 0.2, ease: [0.16, 1, 0.3, 1] }}
                   className="absolute"
                   style={{
                     left: `${food.x * CELL_SIZE + 5}px`,
@@ -362,7 +552,14 @@ export function SnakeDot() {
                         {score}
                       </div>
                       <button
-                        onClick={resetGame}
+                        onClick={() => {
+                          setSnake(INITIAL_SNAKE);
+                          setFood(randomFood(INITIAL_SNAKE));
+                          setDirection(INITIAL_DIRECTION);
+                          directionRef.current = INITIAL_DIRECTION;
+                          setScore(0);
+                          setGameOver(false);
+                        }}
                         className="mt-2 font-mono text-[10px] uppercase tracking-wider border border-foreground px-4 py-2 hover:bg-foreground hover:text-background transition-colors duration-300"
                       >
                         Rejouer
@@ -381,7 +578,7 @@ export function SnakeDot() {
                   <span>← ↑ ↓ →</span>
                   <span className="ml-2">bouger</span>
                 </div>
-                <div>Murs traversables · auto-collision = game over</div>
+                <div>Murs traversables · Échap pour fermer</div>
               </div>
             </motion.div>
           </div>
