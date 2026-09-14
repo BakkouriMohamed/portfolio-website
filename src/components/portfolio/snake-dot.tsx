@@ -137,18 +137,11 @@ export function SnakeDot() {
             break;
         }
 
-        // Wall collision
-        if (
-          head.x < 0 ||
-          head.x >= GRID_SIZE ||
-          head.y < 0 ||
-          head.y >= GRID_SIZE
-        ) {
-          setGameOver(true);
-          return prev;
-        }
+        // Wrap around walls — the snake comes out the other side
+        head.x = (head.x + GRID_SIZE) % GRID_SIZE;
+        head.y = (head.y + GRID_SIZE) % GRID_SIZE;
 
-        // Self collision
+        // Self collision (only — walls no longer kill)
         if (prev.some((s) => s.x === head.x && s.y === head.y)) {
           setGameOver(true);
           return prev;
@@ -209,7 +202,7 @@ export function SnakeDot() {
 
   return (
     <>
-      {/* Small dot — visible when game is closed */}
+      {/* Dot + hint — visible when game is closed */}
       <motion.span
         onClick={openGame}
         role="button"
@@ -223,9 +216,25 @@ export function SnakeDot() {
         }}
         animate={{ opacity: gameOpen ? 0 : 1, scale: gameOpen ? 0.5 : 1 }}
         transition={{ duration: 0.2 }}
-        className="inline-block ml-2 md:ml-4 align-middle w-[8px] h-[8px] bg-foreground/50 rounded-full cursor-pointer select-none hover:bg-foreground hover:scale-125 transition-colors duration-300"
+        className="inline-flex items-center gap-2 align-middle ml-2 md:ml-4 cursor-pointer select-none group"
         style={{ touchAction: "none" }}
-      />
+      >
+        {/* Pulsing dot — bigger, Swiss red, draws attention */}
+        <span className="relative inline-flex items-center justify-center w-5 h-5 md:w-6 md:h-6">
+          {/* Pulsing aura */}
+          <span className="absolute inset-0 rounded-full bg-swiss-red/30 animate-ping" />
+          {/* Dot core */}
+          <span className="relative w-3 h-3 md:w-4 md:h-4 bg-swiss-red rounded-full transition-transform duration-300 group-hover:scale-125" />
+        </span>
+
+        {/* Hint label */}
+        <span className="font-mono text-[10px] md:text-xs uppercase tracking-wider text-muted-foreground group-hover:text-swiss-red transition-colors duration-300 flex items-center gap-1.5">
+          <span>Cliquer pour jouer</span>
+          <svg width="12" height="12" viewBox="0 0 12 12" fill="none" className="opacity-50 group-hover:opacity-100 group-hover:translate-x-0.5 transition-all duration-300">
+            <path d="M2 6h8M7 3l3 3-3 3" stroke="currentColor" strokeWidth="1.5" />
+          </svg>
+        </span>
+      </motion.span>
 
       {/* Game canvas — centered, fades in when game is open */}
       <AnimatePresence>
@@ -370,9 +379,9 @@ export function SnakeDot() {
               <div className="mt-3 flex items-center justify-between font-mono text-[9px] uppercase tracking-wider text-muted-foreground">
                 <div className="flex items-center gap-1">
                   <span>← ↑ ↓ →</span>
-                  <span className="ml-2">pour bouger</span>
+                  <span className="ml-2">bouger</span>
                 </div>
-                <div>Échap pour fermer</div>
+                <div>Murs traversables · auto-collision = game over</div>
               </div>
             </motion.div>
           </div>
