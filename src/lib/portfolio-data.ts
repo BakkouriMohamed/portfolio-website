@@ -8,6 +8,8 @@ export const profile = {
   role: "Spécialiste en Marketing Digital",
   location: "Fès, Maroc",
   email: "mohamedbakkouri88@gmail.com",
+  phone: "+212649942204",
+  phoneDisplay: "+212 6 49 94 22 04",
   linkedin: "https://www.linkedin.com/in/mohamedbakkouri/",
   linkedinCerts: "https://www.linkedin.com/in/mohamedbakkouri/details/certifications/",
   intro:

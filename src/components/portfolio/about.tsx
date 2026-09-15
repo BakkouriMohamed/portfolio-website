@@ -64,6 +64,17 @@ export function About() {
             </div>
             <div>
               <div className="font-mono text-[10px] uppercase tracking-wider text-muted-foreground mb-1">
+                Téléphone
+              </div>
+              <a
+                href={`tel:${profile.phone}`}
+                className="link-underline font-mono text-sm hover:text-swiss-red transition-colors"
+              >
+                {profile.phoneDisplay}
+              </a>
+            </div>
+            <div>
+              <div className="font-mono text-[10px] uppercase tracking-wider text-muted-foreground mb-1">
                 LinkedIn
               </div>
               <a
