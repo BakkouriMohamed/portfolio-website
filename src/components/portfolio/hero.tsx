@@ -68,7 +68,7 @@ export function Hero() {
     <section
       id="top"
       ref={ref}
-      className="relative min-h-screen flex flex-col pt-20 overflow-hidden grain"
+      className="relative min-h-screen flex flex-col pt-28 overflow-hidden grain"
     >
       {/* Top meta row */}
       <motion.div

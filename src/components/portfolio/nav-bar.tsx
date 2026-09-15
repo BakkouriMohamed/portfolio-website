@@ -56,18 +56,18 @@ export function NavBar() {
 
       <header className="fixed top-0 left-0 right-0 z-40 backdrop-blur-md bg-background/80 border-b border-border">
         <div className="mx-auto max-w-[1600px] px-6 lg:px-10">
-          <div className="flex items-center justify-between h-14">
+          <div className="flex items-center justify-between h-20">
             {/* Left: MB logo + name */}
             <a
               href="#top"
               className="font-display font-bold text-sm tracking-tightest uppercase flex items-center gap-3 group"
             >
-              <div className="relative w-8 h-8 overflow-hidden group-hover:scale-110 transition-transform duration-300">
+              <div className="relative w-16 h-16 overflow-hidden group-hover:scale-110 transition-transform duration-300">
                 <Image
                   src="/logo-mb.png"
                   alt="MB Logo"
                   fill
-                  sizes="32px"
+                  sizes="64px"
                   className="object-cover"
                 />
               </div>
