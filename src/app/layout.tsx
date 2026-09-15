@@ -38,7 +38,8 @@ export const metadata: Metadata = {
   authors: [{ name: "Mohamed Bakkouri" }],
   icons: {
     icon: "/favicon.png",
-    apple: "/favicon.png",
+    shortcut: "/favicon.png",
+    apple: "/apple-touch-icon.png",
   },
   openGraph: {
     title: "Mohamed Bakkouri — Digital Marketing Specialist",
