@@ -94,6 +94,9 @@ export const metadata: Metadata = {
       "max-video-preview": -1,
     },
   },
+  verification: {
+    google: "EclGD6eXzkMTbBDVDiU89iRiY5tZtsGE1c2ToCngjZI",
+  },
 };
 
 // Schema.org Person structured data (JSON-LD)
