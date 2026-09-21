@@ -3,6 +3,7 @@
 
 import ZAI from "z-ai-web-dev-sdk";
 import fs from "fs";
+import sharp from "sharp";
 
 const PROMPT = `Editorial social media banner, 1200x630 landscape, pure white background. 
 Top left corner: small black square logo with white letters "MB" (50x50px). 
@@ -27,7 +28,6 @@ async function generate() {
   const buffer = Buffer.from(imageBase64, "base64");
   
   // Resize to standard OG image dimensions (1200x630) with sharp
-  const sharp = require("sharp");
   const resizedBuffer = await sharp(buffer)
     .resize(1200, 630, { fit: "cover", position: "center" })
     .png()
