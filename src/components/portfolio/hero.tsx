@@ -149,7 +149,7 @@ export function Hero() {
             >
               <Image
                 src="/mohamed-portrait.jpeg"
-                alt="Mohamed Bakkouri — portrait professionnel"
+                alt="Mohamed Bakkouri — Spécialiste en Marketing Digital, portrait professionnel"
                 fill
                 sizes="(max-width: 768px) 100vw, 40vw"
                 priority
