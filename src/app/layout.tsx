@@ -27,9 +27,9 @@ const BASE_URL = "https://mohamedbakkouri.vercel.app";
 
 export const metadata: Metadata = {
   metadataBase: new URL(BASE_URL),
-  title: "Mohamed Bakkouri — Digital Marketing Specialist",
+  title: "Mohamed BAKKOURI- Digital Marketing Specialist",
   description:
-    "Mohamed Bakkouri — Spécialiste en Marketing Digital. Étudiant en Master Marketing Digital à l'ENCG Fès. SEO, Social Media, Analytics & Stratégie de marque.",
+    "Mohamed BAKKOURI- Spécialiste en Marketing Digital. Étudiant en Master Marketing Digital à l'ENCG Fès. SEO, Social Media, Analytics & Stratégie de marque.",
   keywords: [
     "Mohamed Bakkouri",
     "Marketing Digital",
@@ -58,30 +58,28 @@ export const metadata: Metadata = {
     apple: "/apple-touch-icon.png",
   },
   openGraph: {
-    title: "Mohamed Bakkouri — Digital Marketing Specialist",
+    title: "Mohamed BAKKOURI- Digital Marketing Specialist",
     description:
-      "Spécialiste en Marketing Digital basé à Fès, Maroc. SEO, Social Media, Analytics & Stratégie de marque. Disponible pour missions.",
+      "Mohamed BAKKOURI- Spécialiste en Marketing Digital. Étudiant en Master Marketing Digital à l'ENCG Fès. SEO, Social Media, Analytics & Stratégie de marque.",
     type: "website",
-    locale: "fr_FR",
-    siteName: "Mohamed Bakkouri — Portfolio",
-    url: BASE_URL,
+    url: `${BASE_URL}/`,
     images: [
       {
-        url: "/og-image.png",
+        url: `${BASE_URL}/og-image.jpg`,
         width: 1200,
         height: 630,
-        alt: "Mohamed Bakkouri — Spécialiste en Marketing Digital",
-        type: "image/png",
+        alt: "Mohamed BAKKOURI — Spécialiste en Marketing Digital",
+        type: "image/jpeg",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Mohamed Bakkouri — Digital Marketing Specialist",
+    title: "Mohamed BAKKOURI- Digital Marketing Specialist",
     description:
-      "Spécialiste en Marketing Digital basé à Fès, Maroc. SEO, Social Media, Analytics & Stratégie de marque.",
-    images: ["/og-image.png"],
-    creator: "@mohamedbakkouri",
+      "Mohamed BAKKOURI- Spécialiste en Marketing Digital. Étudiant en Master Marketing Digital à l'ENCG Fès. SEO, Social Media, Analytics & Stratégie de marque.",
+    url: `${BASE_URL}/`,
+    images: [`${BASE_URL}/og-image.jpg`],
   },
   robots: {
     index: true,
@@ -103,10 +101,10 @@ export const metadata: Metadata = {
 const personJsonLd = {
   "@context": "https://schema.org",
   "@type": "Person",
-  name: "Mohamed Bakkouri",
-  jobTitle: "Spécialiste en Marketing Digital",
+  name: "Mohamed BAKKOURI",
+  jobTitle: "Digital Marketing Specialist",
   description:
-    "Étudiant en Master Marketing Digital à l'ENCG Fès. Spécialisé en SEO, Social Media, Analytics & Stratégie de marque.",
+    "Spécialiste en Marketing Digital. Étudiant en Master Marketing Digital à l'ENCG Fès. SEO, Social Media, Analytics & Stratégie de marque.",
   url: BASE_URL,
   image: `${BASE_URL}/mohamed-portrait.jpeg`,
   email: "mailto:mohamedbakkouri88@gmail.com",
