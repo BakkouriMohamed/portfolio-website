@@ -27,9 +27,9 @@ const BASE_URL = "https://mohamedbakkouri.app";
 
 export const metadata: Metadata = {
   metadataBase: new URL(BASE_URL),
-  title: "Mohamed BAKKOURI- Digital Marketing Specialist",
+  title: "Mohamed BAKKOURI- Futur lauréat en marketing et action commerciale",
   description:
-    "Mohamed BAKKOURI- Spécialiste en Marketing Digital. Étudiant en Master Marketing Digital à l'ENCG Fès. SEO, Social Media, Analytics & Stratégie de marque.",
+    "Mohamed BAKKOURI- Futur lauréat en marketing et action commerciale à l'ENCG Fès - ex-CPGEiste. SEO, SEA, GEO, Social Media, Analytics & Stratégie de marque.",
   keywords: [
     "Mohamed Bakkouri",
     "Marketing Digital",
@@ -58,9 +58,9 @@ export const metadata: Metadata = {
     apple: "/apple-touch-icon.png",
   },
   openGraph: {
-    title: "Mohamed BAKKOURI- Digital Marketing Specialist",
+    title: "Mohamed BAKKOURI- Futur lauréat en marketing et action commerciale",
     description:
-      "Mohamed BAKKOURI- Spécialiste en Marketing Digital. Étudiant en Master Marketing Digital à l'ENCG Fès. SEO, Social Media, Analytics & Stratégie de marque.",
+      "Mohamed BAKKOURI- Futur lauréat en marketing et action commerciale à l'ENCG Fès - ex-CPGEiste. SEO, SEA, GEO, Social Media, Analytics & Stratégie de marque.",
     type: "website",
     url: `${BASE_URL}/`,
     images: [
@@ -75,9 +75,9 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Mohamed BAKKOURI- Digital Marketing Specialist",
+    title: "Mohamed BAKKOURI- Futur lauréat en marketing et action commerciale",
     description:
-      "Mohamed BAKKOURI- Spécialiste en Marketing Digital. Étudiant en Master Marketing Digital à l'ENCG Fès. SEO, Social Media, Analytics & Stratégie de marque.",
+      "Mohamed BAKKOURI- Futur lauréat en marketing et action commerciale à l'ENCG Fès - ex-CPGEiste. SEO, SEA, GEO, Social Media, Analytics & Stratégie de marque.",
     url: `${BASE_URL}/`,
     images: [`${BASE_URL}/og-image.jpg`],
   },
@@ -102,12 +102,12 @@ const personJsonLd = {
   "@context": "https://schema.org",
   "@type": "Person",
   name: "Mohamed BAKKOURI",
-  jobTitle: "Digital Marketing Specialist",
+  jobTitle: "Futur lauréat en marketing et action commerciale",
   description:
-    "Spécialiste en Marketing Digital. Étudiant en Master Marketing Digital à l'ENCG Fès. SEO, Social Media, Analytics & Stratégie de marque.",
+    "Futur lauréat en marketing et action commerciale à l'ENCG Fès - ex-CPGEiste. Compétences en SEO, SEA, GEO, Social Media, Analytics & Stratégie de marque.",
   url: BASE_URL,
   image: `${BASE_URL}/mohamed-portrait.jpeg`,
-  email: "mailto:mohamedbakkouri88@gmail.com",
+  email: "mailto:mo.bakkouri@gmail.com",
   telephone: "+212649942204",
   address: {
     "@type": "PostalAddress",

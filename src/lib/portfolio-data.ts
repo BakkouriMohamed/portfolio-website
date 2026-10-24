@@ -5,95 +5,110 @@ export const profile = {
   name: "Mohamed Bakkouri",
   firstName: "Mohamed",
   lastName: "Bakkouri",
-  role: "Spécialiste en Marketing Digital",
+  role: "Futur lauréat en marketing et action commerciale",
   location: "Fès, Maroc",
-  email: "mohamedbakkouri88@gmail.com",
+  email: "mo.bakkouri@gmail.com",
   phone: "+212649942204",
   phoneDisplay: "+212 6 49 94 22 04",
   linkedin: "https://www.linkedin.com/in/mohamedbakkouri/",
   linkedinCerts: "https://www.linkedin.com/in/mohamedbakkouri/details/certifications/",
   intro:
-    "Étudiant en Master Marketing Digital à l'ENCG Fès. Double culture académique — Classes Préparatoires ECS puis Master Marketing Digital. Je combine stratégie, créativité et analyse de données pour développer la visibilité des marques, de l'audit SEO à la gestion des réseaux sociaux, au service d'objectifs mesurables.",
-  tagline: "Stratégie · Créativité · Données",
+    "Futur lauréat en marketing et action commerciale à l'ENCG Fès - ex-CPGEiste. J'ai développé des compétences en communication digitale, création de contenu, SEO, SEA et gestion des réseaux sociaux. Je souhaite mettre mes compétences au service d'une entreprise afin de renforcer sa visibilité, développer sa relation client et contribuer à la réussite de ses actions commerciales et digitales.",
+  tagline: "SEO · Social Media · Analytics",
 };
 
 export const languages = [
-  { name: "Français", level: "Natif", code: "FR" },
-  { name: "Arabe", level: "Natif", code: "AR" },
-  { name: "Anglais", level: "Professionnel", code: "EN" },
+  { name: "Arabe", level: "Langue maternelle", code: "AR" },
+  { name: "Français", level: "Avancé", code: "FR" },
+  { name: "Anglais", level: "Courant", code: "EN" },
 ];
 
 export const education = [
   {
-    degree: "Master 1 — Marketing Digital",
+    degree: "Master 1 — Marketing et action commerciale",
     school: "ENCG Fès",
-    period: "2022 — Présent",
+    period: "Depuis 2024",
   },
   {
-    degree: "Classes Préparatoires ECS",
-    school: "Économie & Commerce Scientifique",
-    period: "2020 — 2022",
+    degree: "Classe préparatoire aux grandes écoles — ECS",
+    school: "CPGE ECS",
+    period: "2022 — 2024",
   },
 ];
 
 export const experiences = [
   {
-    role: "Stagiaire Marketing",
-    company: "Marjane Group",
+    role: "Digital Marketing Intern — SEO, GEO & Lead Generation",
+    company: "Phikra Creative",
     location: "Maroc",
-    period: "Mai — Juin 2026",
-    tags: ["Marketing", "Retail", "Distribution"],
+    period: "Juil. — Nov. 2026",
+    tags: ["SEO", "GEO", "Lead Generation", "Funnels"],
     description:
-      "Stage marketing au sein du leader marocain de la grande distribution. Participation aux opérations merchandising, analyse des ventes et support aux lancements de campagnes en magasin.",
+      "Optimisation SEO et GEO de sites web (e-commerce, importation B2B, santé) : recherche de mots-clés, optimisation on-page, SEO technique et amélioration de la visibilité organique. Mise en œuvre de stratégies de référencement naturel à partir de zéro et optimisation du SEO local d'une clinique, avec renforcement de sa présence digitale sur LinkedIn. Contribution à la création de funnels marketing et à la génération de leads.",
+    metric: null,
+    logo: "/logo-phikra.png",
+  },
+  {
+    role: "Responsable marketing produit",
+    company: "Marjane Group",
+    location: "Fès",
+    period: "Mai — Juil. 2026",
+    tags: ["Marketing produit", "Retail", "Merchandising"],
+    description:
+      "Participation au suivi des produits du rayon Bazar et à leur mise en avant en magasin et gestion du stock. Observation de l'offre, des besoins clients et des pratiques terrain pour améliorer la présentation des articles. Collaboration avec les équipes sur site pour améliorer la visibilité des articles, faciliter le repérage des produits et mieux répondre aux attentes des clients.",
     metric: null,
     logo: "/logo-marjane.jpg",
   },
   {
-    role: "Assistant Marketing",
+    role: "Digital Marketing Manager",
     company: "Ghaiti Event",
     location: "Rabat",
-    period: "Juil. — Sep. 2025",
-    tags: ["Event Marketing", "Social Media", "Campagnes"],
+    period: "Juil. — Août 2025",
+    tags: ["Social Media", "Meta Ads", "Campagnes"],
     description:
-      "Pilotage de la stratégie social media pour une agence événementielle : campagnes, création de contenu et activation d'engagement autour des événements.",
-    metric: "+15% d'engagement",
+      "Gestion des réseaux sociaux de l'entreprise : création de contenus, publication des posts et suivi des interactions. Lancement de campagnes publicitaires via Meta Ads, avec suivi du ciblage et des performances. Amélioration de la visibilité des pages de l'entreprise sur les réseaux sociaux.",
+    metric: "+50% de visibilité",
     logo: "/logo-ghaiti.jpg",
   },
   {
-    role: "Assistant Marketing Digital",
+    role: "Digital Marketing Specialist",
     company: "UrbanFlex",
-    location: "Paris / Remote",
+    location: "Remote (Paris)",
     period: "Juin — Juil. 2025",
-    tags: ["SEO", "Content Creation", "Remote"],
+    tags: ["Social Media", "Google Business", "Conversion"],
     description:
-      "Production de contenus orientés conversion et optimisation SEO technique & visuelle pour une marque basée à Paris, en full remote.",
-    metric: "+20% de visibilité",
+      "Gestion des réseaux sociaux pour les projets clients de l'agence : création de contenus, publication et suivi des interactions. Gestion des Google Business Profile des clients. Création de contenus publicitaires orientés conversion pour promouvoir les offres des clients sur Instagram et Facebook. Amélioration de la visibilité des pages gérées.",
+    metric: "+30 à 70% de visibilité",
     logo: null,
   },
 ];
 
 export const skills = [
   { name: "SEO", category: "Acquisition" },
-  { name: "Social Media", category: "Acquisition" },
+  { name: "SEA (Google & Meta Ads)", category: "Acquisition" },
+  { name: "GEO / AEO", category: "Acquisition" },
+  { name: "Social Media", category: "Community" },
+  { name: "Content Marketing", category: "Création" },
   { name: "Analytics", category: "Données" },
-  { name: "Création de contenu", category: "Création" },
-  { name: "Stratégie Marketing", category: "Stratégie" },
-  { name: "Marketing Commercial", category: "Stratégie" },
 ];
 
 export const tools = [
-  "Google Analytics 4",
-  "Semrush",
+  "Google Analytics",
   "Meta Business Suite",
-  "HubSpot",
+  "Google Ads",
+  "Meta Ads",
+  "Google Sheets",
   "Canva Pro",
   "WordPress",
-  "Looker Studio",
-  "Mailchimp",
+  "Shopify",
   "Notion",
-  "Search Console",
-  "Ahrefs",
-  "Figma",
+  "Google Search Console",
+  "Adobe Photoshop",
+  "Adobe Illustrator",
+  "Adobe InDesign",
+  "Adobe Premiere Pro",
+  "Adobe After Effects",
+  "Adobe Lightroom",
   "CapCut",
 ];
 
@@ -141,28 +156,34 @@ export const projects = [
 
 export const certifications = [
   {
-    name: "Google Digital Marketing",
-    year: "2023",
-    issuer: "Google",
-    credentialId: "Google Activate",
-  },
-  {
-    name: "Meta Social Media Marketing",
-    year: "2022",
-    issuer: "Meta",
-    credentialId: "Meta Blueprint",
-  },
-  {
-    name: "HubSpot Content Marketing",
-    year: "2023",
-    issuer: "HubSpot",
-    credentialId: "HubSpot Academy",
-  },
-  {
-    name: "Google Analytics 4",
+    name: "AI-Powered Shopping Ads",
     year: "2024",
-    issuer: "Google",
+    issuer: "Google Skillshop",
     credentialId: "Skillshop",
+  },
+  {
+    name: "Google Analytics",
+    year: "2024",
+    issuer: "Google Skillshop",
+    credentialId: "Skillshop",
+  },
+  {
+    name: "Create and Optimize Google Display Ads Campaigns",
+    year: "2025",
+    issuer: "Skillshop",
+    credentialId: "Skillshop",
+  },
+  {
+    name: "Attract and Engage Customers with Digital Marketing",
+    year: "2025",
+    issuer: "Google",
+    credentialId: "Google",
+  },
+  {
+    name: "Advertising with Meta",
+    year: "2025",
+    issuer: "Meta",
+    credentialId: "Meta",
   },
 ];
 
