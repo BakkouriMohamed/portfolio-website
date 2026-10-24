@@ -23,7 +23,7 @@ const spaceGrotesk = Space_Grotesk({
   display: "swap",
 });
 
-const BASE_URL = "https://mohamedbakkouri.app";
+const BASE_URL = "https://www.bakkouri.me";
 
 export const metadata: Metadata = {
   metadataBase: new URL(BASE_URL),
