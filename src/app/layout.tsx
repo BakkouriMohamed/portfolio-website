@@ -23,7 +23,7 @@ const spaceGrotesk = Space_Grotesk({
   display: "swap",
 });
 
-const BASE_URL = "https://www.bakkouri.me";
+const BASE_URL = "https://bakkouri.me";
 
 export const metadata: Metadata = {
   metadataBase: new URL(BASE_URL),
@@ -62,6 +62,7 @@ export const metadata: Metadata = {
     description:
       "Mohamed BAKKOURI- Futur lauréat en marketing et action commerciale à l'ENCG Fès - ex-CPGEiste. SEO, SEA, GEO, Social Media, Analytics & Stratégie de marque.",
     type: "website",
+    siteName: "Mohamed Bakkouri",
     url: `${BASE_URL}/`,
     images: [
       {
@@ -136,6 +137,15 @@ const personJsonLd = {
   ],
 };
 
+// Schema.org WebSite structured data (JSON-LD)
+const websiteJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  name: "Mohamed Bakkouri",
+  alternateName: ["Med Bakkouri"],
+  url: `${BASE_URL}/`,
+};
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -144,6 +154,12 @@ export default function RootLayout({
   return (
     <html lang="fr" suppressHydrationWarning>
       <head>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify(websiteJsonLd),
+          }}
+        />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
