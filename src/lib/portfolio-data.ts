@@ -25,9 +25,9 @@ export const languages = [
 
 export const education = [
   {
-    degree: "Master 1 — Marketing et action commerciale",
+    degree: "5ème année — Marketing et action commerciale",
     school: "ENCG Fès",
-    period: "Depuis 2024",
+    period: "2026 — 2027",
   },
   {
     degree: "Classe préparatoire aux grandes écoles — ECS",
@@ -126,7 +126,7 @@ export const projects = [
     name: "Ghmoiya",
     subtitle: "Marque de Makeup",
     category: "Branding · Identité de marque",
-    year: "2024",
+    year: "2026",
     description:
       "Développement complet d'une marque de cosmétiques premium : positionnement haut de gamme autour de la Figue de Barbarie, identité visuelle raffinée et stratégie de marque complète — du naming au déploiement.",
     tags: ["Branding", "Positionnement", "Identité visuelle"],
@@ -138,7 +138,7 @@ export const projects = [
     category: "Social Media · Événementiel",
     year: "2025",
     description:
-      "Stratégie marketing pour une agence événementielle : campagnes social media, gestion de contenu et création d'engagement autour des événements. Activation multi-canal et suivi de performance.",
+      "Stratégie marketing pour une agence événementielle : recherche d'appels d'offres, confirmation, organisation des événements avec l'équipe du marketing événementiel. Campagnes social media, gestion de contenu et création d'engagement autour des événements. Activation multi-canal et suivi de performance.",
     tags: ["Social Media", "Campagnes", "Événementiel"],
     image: "/project-ghaiti.jpg",
   },
